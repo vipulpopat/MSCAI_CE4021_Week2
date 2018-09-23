@@ -1,4 +1,3 @@
-
 # coding: utf-8
 
 # **Student Name: Mark Murnane **
@@ -29,6 +28,10 @@ def parse_term (equation_term, differential):
     # TODO: Some test assesertions and parameter checking
     equation_term
     
+    # parse should return a tuple with a constant coefficient and any other variables
+    # and then the exponent.
+    # should be able to handle exponents other than main term
+    # any numbers popped out dhould be coefficient
     
     if differential not in equation_term:
         coefficient = equation_term
@@ -88,6 +91,8 @@ def number_to_string (value):
 
 # Second part is to have a function that implements the Power Rule
 
+# Rewrite to accomodate tuple based components and letters
+
 def apply_power_rule(equation_term, differential):
     """ Applies the Differential Calculus Power Rule to an algebraic term, e.g. f'(5x^2) = 10x.
     
@@ -137,6 +142,7 @@ def apply_power_rule(equation_term, differential):
 
 # In[11]:
 
+# Add a print function and call parse, differentiate and print.  
 
 def differentiate_term(equation_term, differential):
     
