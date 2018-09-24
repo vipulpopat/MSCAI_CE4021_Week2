@@ -6,6 +6,50 @@
 
 import re
 
+
+def is_number(value):
+     
+    """ Simple function to determine if a string value is a number (integer or float).
+     
+    Args:
+        value (str)    String value to be tested to see if it is numeric
+         
+    Returns:
+        bool:          True if value is a number.  False otherwise
+    """
+     
+    try:
+        float(value)
+    except ValueError:
+        return False
+     
+    return True
+     
+     
+def number_to_string (value):
+      
+    """ Simple function that takes a string representing a number and formats it for display.
+     
+    Integer values are returned with no decimal place.  Float values are returned rounded to 2 decimal places (no trailing zeroes).
+     
+    Args:
+        value (str)        Value representing a number
+         
+    Returns:
+        str                Formatted string value, or empty string if the input is not a number.
+    """
+      
+    number_string = ''
+      
+    if is_number(value):
+        val = float(value)
+        if val.is_integer():
+            number_string = str(int(val))
+        else:
+            number_string = str(round(val, 2))
+             
+    return number_string
+
 # Need to take in text and parse it into a tuple list
 # No need for a differentiate term function : use a lamba to call f'(term)
 # Similar for parse funciton
@@ -66,6 +110,7 @@ def parse_term (equation_term, differential):
     
     return (coefficient, exponent)
 
+print ("Parsing tests ...")
 
 print(parse_term("16x", 'x'))
 print(parse_term("3x^2", 'x'))
@@ -73,51 +118,45 @@ print(parse_term('x', 'x'))
 print(parse_term('12', 'x'))
 print(parse_term('', 'x'))
 
+#print(parse_term("ax^3", 'x')
+
+
+def print_term(equation_term, differential):
+  
+    if equation_term == "" or equation_term == None:
+        return ''
+    elif differential == "" or equation_term == None:
+        return ''
+    
+    coefficient, exponent = equation_term    
+    
+    diff_term = ''
+    coefficient_str = number_to_string(coefficient)
+    
+    if exponent == 0:
+        diff_term = "{0}".format(coefficient_str)
+    else:
+        if coefficient == 1:
+            coefficient_str = ''
+            
+        if exponent == 1:
+            diff_term = "{0}{1}".format(coefficient_str, differential)
+        else:
+            diff_term = "{0}{1}^{2}".format(coefficient_str, differential, exponent)
+    
+    return diff_term
+
+print(print_term(parse_term("16x", 'x'), 'x'))
+print(print_term(parse_term("3x^2", 'x'), 'x'))
+print(print_term(parse_term('x', 'x'), 'x'))
+print(print_term(parse_term('12', 'x'), 'x'))
+print(print_term(parse_term('1', 'x'), 'x'))
+print(print_term(parse_term('', 'x'), 'x'))
+
   
 # 
 # 
-# def is_number(value):
-#     
-#     """ Simple function to determine if a string value is a number (integer or float).
-#     
-#     Args:
-#         value (str)    String value to be tested to see if it is numeric
-#         
-#     Returns:
-#         bool:          True if value is a number.  False otherwise
-#     """
-#     
-#     try:
-#         float(value)
-#     except ValueError:
-#         return False
-#     
-#     return True
-#     
-#     
-# def number_to_string (value):
-#      
-#     """ Simple function that takes a string representing a number and formats it for display.
-#     
-#     Integer values are returned with no decimal place.  Float values are returned rounded to 2 decimal places (no trailing zeroes).
-#     
-#     Args:
-#         value (str)        Value representing a number
-#         
-#     Returns:
-#         str                Formatted string value, or empty string if the input is not a number.
-#     """
-#      
-#     number_string = ''
-#      
-#     if is_number(value):
-#         val = float(value)
-#         if val.is_integer():
-#             number_string = str(int(val))
-#         else:
-#             number_string = str(round(val, 2))
-#             
-#     return number_string
+
 #     
 # 
 # 
@@ -150,14 +189,16 @@ def apply_power_rule(equation_term):
     else:
         return (0,0)
 
+print ("\n\nPower rule tests ...")
 
 print(apply_power_rule(parse_term("16x", 'x')))
 print(apply_power_rule(parse_term("3x^2", 'x')))
 print(apply_power_rule(parse_term('x', 'x')))
 print(apply_power_rule(parse_term('12', 'x')))
 print(apply_power_rule(parse_term('', 'x')))
-# 
-# 
+
+
+
 # # Now for some differentiation and application of rules
 # 
 # # In[11]:
@@ -197,42 +238,52 @@ print(apply_power_rule(parse_term('', 'x')))
 # 
 # 
 # # In[12]:
-# def differentiate_polynomial (equation, differential):
-#     
-#     """ Calculates the first derivative of a simple polynomial equation. 
-#     
-#     The function handles basic operators such as +, -, / for division and * for multiplication.
-#     
-#     Powers should be added using the '^' symbol, e.g. x^3 is x-cubed.
-#     
-#    
-#     Args:
-#         equation (str)    An algebraic equation for which the derivative is to be calculated.
-#         differential (str)     The variable which derivative will be calculated for
-#         
-#     Returns:
-#         str                    The first derivative of the equation with respect to the differential
-#     """
-#     
-#     operators = re.compile("(\*|\/|\+|\-)")
-#       
-#     # Iterate over the equation
-#     equation_terms = re.split(operators, equation)
-#     
-#     diff_equation = ''
-#         
-#     for term in equation_terms:
-#         if re.match(operators, term):
-#             diff_equation += f' {term} '
-#         else:
-#             diff_equation += differentiate_term(term.strip(), differential)
-#     
-#     return diff_equation
+def differentiate_polynomial (equation, differential):
+     
+    """ Calculates the first derivative of a simple polynomial equation. 
+     
+    The function handles basic operators such as +, -, / for division and * for multiplication.
+     
+    Powers should be added using the '^' symbol, e.g. x^3 is x-cubed.
+     
+    
+    Args:
+        equation (str)    An algebraic equation for which the derivative is to be calculated.
+        differential (str)     The variable which derivative will be calculated for
+         
+    Returns:
+        str                    The first derivative of the equation with respect to the differential
+    """
+     
+    operators = re.compile("(\*|\/|\+|\-)")
+       
+    # Iterate over the equation
+    equation_terms = re.split(operators, equation)
+     
+    diff_equation = ''
+         
+    for term in equation_terms:
+        if re.match(operators, term):
+            diff_equation += f' {term} '
+        else:
+            src_term = parse_term(term.strip(), differential)
+            diff_equation += print_term(apply_power_rule(src_term), differential)
+     
+    return diff_equation
+
+print ("\n\nDifferentiation tests ...")
+
+print(differentiate_polynomial("16x", 'x'))
+print(differentiate_polynomial("3x^2", 'x'))
+print(differentiate_polynomial("x", 'x'))
+print(differentiate_polynomial("12", 'x'))
+print(differentiate_polynomial("", 'x'))
 # 
 # 
-# print(differentiate_polynomial ("x^501 + 3x^7 - 0.5x^6 + x^5 + 2x^3 + 3x^2 - 1", 'x'))
-# print(differentiate_polynomial ("3x^2", 'x'))
+print(differentiate_polynomial ("x^501 + 3x^7 - 0.5x^6 + x^5 + 2x^3 + 3x^2 - 1", 'x'))
+print(differentiate_polynomial ("3x^2", 'x'))
 # print(differentiate_polynomial ("ax^3 + 0.5x^8", 'x'))
 # print(differentiate_polynomial ("5ax^3 + 0.5x^7 - 4bx^2", 'x'))
-# print(differentiate_polynomial ("6x", 'x'))
-# print(differentiate_polynomial ("16", 'x'))
+print(differentiate_polynomial ("6x", 'x'))
+print(differentiate_polynomial ("16", 'x'))
+print(differentiate_polynomial('0', 'x'))
